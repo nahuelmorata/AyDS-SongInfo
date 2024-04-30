@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -20,7 +19,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.util.Locale
 
-private data class ArtistInfo(
+private data class ArtistBiography(
     val name: String,
     val biography: String,
     val articleUrl: String
@@ -48,7 +47,7 @@ class OtherInfoWindow : Activity() {
         initViewProperties()
         initArticleDatabase()
         initLastFMAPI()
-        getArtistInfoAsync()
+        getArtistBiographyAsync()
     }
 
     private fun initViewProperties() {
@@ -71,59 +70,59 @@ class OtherInfoWindow : Activity() {
             databaseBuilder(this, ArticleDatabase::class.java, ARTICLE_DB_NAME).build()
     }
 
-    private fun getArtistInfoAsync() {
+    private fun getArtistBiographyAsync() {
         Thread {
-            getArtistInfo()
+            getArtistBiography()
         }.start()
     }
 
-    private fun getArtistInfo() {
-        val artistInfo = getArtistInfoFromRepository()
-        updateUiArtistInfo(artistInfo)
+    private fun getArtistBiography() {
+        val artistBiography = getArtistBiographyFromRepository()
+        updateUiArtistBiography(artistBiography)
     }
 
-    private fun ArtistInfo.markItAsLocal() = copy(biography = "[*]$biography")
+    private fun ArtistBiography.markItAsLocal() = copy(biography = "[*]$biography")
 
 
-    private fun getArtistInfoFromRepository(): ArtistInfo {
+    private fun getArtistBiographyFromRepository(): ArtistBiography {
         val artistName = getArtistName()
         val articleFromDB = getArticleFromDB(artistName)
-        val artistInfo: ArtistInfo
+        val artistBiography: ArtistBiography
         if (articleFromDB!= null) {
-            artistInfo = articleFromDB.markItAsLocal()
+            artistBiography = articleFromDB.markItAsLocal()
         } else {
-            artistInfo = getArtistInfoFromAPI(artistName)
-            if (artistInfo.biography.isNotEmpty()) {
-                insertArtistIntoDB(artistInfo)
+            artistBiography = getArtistBiographyFromAPI(artistName)
+            if (artistBiography.biography.isNotEmpty()) {
+                insertArtistIntoDB(artistBiography)
             }
         }
-        return artistInfo
+        return artistBiography
     }
 
-    private fun insertArtistIntoDB(artistInfo: ArtistInfo) {
+    private fun insertArtistIntoDB(artistBiography: ArtistBiography) {
         articleDatabase.ArticleDao().insertArticle(
             ArticleEntity(
-                artistInfo.name, artistInfo.biography, artistInfo.articleUrl
+                artistBiography.name, artistBiography.biography, artistBiography.articleUrl
             )
         )
     }
 
-    private fun getArtistInfoFromAPI(artistName: String): ArtistInfo {
-        var artistInfo = ArtistInfo(artistName, "", "")
+    private fun getArtistBiographyFromAPI(artistName: String): ArtistBiography {
+        var artistBiography = ArtistBiography(artistName, "", "")
         try {
             val callResponse = getSongFromService(artistName)
-            artistInfo = getArtistBioFromExternalData(callResponse.body(), artistName)
+            artistBiography = getArtistBiographyFromExternalData(callResponse.body(), artistName)
         } catch (e1: IOException) {
             e1.printStackTrace()
         }
 
-        return artistInfo
+        return artistBiography
     }
 
-    private fun getArtistBioFromExternalData(
+    private fun getArtistBiographyFromExternalData(
         serviceData: String?,
         artistName: String
-    ): ArtistInfo {
+    ): ArtistBiography {
         val gson = Gson()
         val jobj = gson.fromJson(serviceData, JsonObject::class.java)
 
@@ -133,16 +132,16 @@ class OtherInfoWindow : Activity() {
         val url = artist[ARTIST_URL_KEY_JSON]
         val text = extract?.asString ?: "No Results"
 
-        return ArtistInfo(artistName, text, url.asString)
+        return ArtistBiography(artistName, text, url.asString)
     }
 
     private fun getSongFromService(artistName: String) =
         lastFMAPI.getArtistInfo(artistName).execute()
 
-    private fun getArticleFromDB(artistName: String): ArtistInfo? {
+    private fun getArticleFromDB(artistName: String): ArtistBiography? {
         val artistInfoEntity = articleDatabase.ArticleDao().getArticleByArtistName(artistName)
         return artistInfoEntity?.let {
-            ArtistInfo(artistName, artistInfoEntity.biography, artistInfoEntity.articleUrl)
+            ArtistBiography(artistName, artistInfoEntity.biography, artistInfoEntity.articleUrl)
         }
     }
 
@@ -150,26 +149,26 @@ class OtherInfoWindow : Activity() {
         intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
 
 
-    private fun updateUiArtistInfo(artistInfo: ArtistInfo) {
+    private fun updateUiArtistBiography(artistBiography: ArtistBiography) {
         runOnUiThread {
-            updateUiArtistInfoLASTFMLogo()
-            updateUiArtistInfoArticle(artistInfo)
-            updateUiArtistInfoURLButton(artistInfo)
+            updateUiArtistBiographyLASTFMLogo()
+            updateUiArtistBiographyArticle(artistBiography)
+            updateUiArtistBiographyURLButton(artistBiography)
         }
     }
 
-    private fun updateUiArtistInfoLASTFMLogo() {
+    private fun updateUiArtistBiographyLASTFMLogo() {
         Picasso.get().load(LASTFM_LOGO_URL).into(lastFMImageView)
     }
 
-    private fun updateUiArtistInfoArticle(artistInfo: ArtistInfo) {
-        val text = artistInfo.biography.replace("\\n", "\n")
-        articleTextView.text = Html.fromHtml(textToHtml(text, artistInfo.name), HtmlCompat.FROM_HTML_MODE_LEGACY)
+    private fun updateUiArtistBiographyArticle(artistBiography: ArtistBiography) {
+        val text = artistBiography.biography.replace("\\n", "\n")
+        articleTextView.text = Html.fromHtml(textToHtml(text, artistBiography.name), HtmlCompat.FROM_HTML_MODE_LEGACY)
     }
 
-    private fun updateUiArtistInfoURLButton(artistInfo: ArtistInfo) {
+    private fun updateUiArtistBiographyURLButton(artistBiography: ArtistBiography) {
         openUrlButton.setOnClickListener {
-            navigateToUrl(artistInfo.articleUrl)
+            navigateToUrl(artistBiography.articleUrl)
         }
     }
 
