@@ -1,4 +1,4 @@
-package ayds.songinfo.moredetails.fulllogic
+package ayds.songinfo.moredetails.fulllogic.view
 
 import android.app.Activity
 import android.content.Intent
@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.room.Room.databaseBuilder
 import ayds.songinfo.R
+import ayds.songinfo.home.model.HomeModelInjector
+import ayds.songinfo.home.view.HomeViewInjector
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
@@ -18,14 +20,18 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.util.Locale
+import ayds.songinfo.moredetails.fulllogic.ArticleDatabase
+import ayds.songinfo.moredetails.fulllogic.LastFMAPI
+import ayds.songinfo.moredetails.fulllogic.ArticleEntity
+import ayds.songinfo.moredetails.fulllogic.model.OtherInfoModel
+import ayds.songinfo.moredetails.fulllogic.model.OtherInfoModelInjector
 
 private data class ArtistBiography(
     val name: String,
     val biography: String,
     val articleUrl: String
 )
-
-private const val ARTIST_NAME_INTENT_EXTRA = "artistName"
+const val ARTIST_NAME_INTENT_EXTRA = "artistName"
 private const val ARTIST_KEY_JSON = "artist"
 private const val ARTIST_BIO_KEY_JSON = "bio"
 private const val ARTIST_CONTENT_KEY_JSON = "content"
@@ -34,20 +40,32 @@ private const val LASTFM_LOGO_URL = "https://upload.wikimedia.org/wikipedia/comm
 private const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 private const val ARTICLE_DB_NAME = "database-name-thename"
 
-class OtherInfoWindow : Activity() {
+interface OtherInfoView {
+
+}
+
+class OtherInfoViewActivity : Activity(), OtherInfoView {
     private lateinit var articleTextView: TextView
     private lateinit var openUrlButton: Button
     private lateinit var lastFMImageView: ImageView
     private lateinit var articleDatabase: ArticleDatabase
     private lateinit var lastFMAPI: LastFMAPI
+    private lateinit var otherInfoModel: OtherInfoModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
+
+        initModule()
         initViewProperties()
         initArticleDatabase()
         initLastFMAPI()
         getArtistBiographyAsync()
+    }
+
+    private fun initModule() {
+        OtherInfoViewInjector.init(this)
+        otherInfoModel = OtherInfoModelInjector.getOtherInfoModel()
     }
 
     private fun initViewProperties() {
@@ -146,7 +164,7 @@ class OtherInfoWindow : Activity() {
     }
 
     private fun getArtistName(): String =
-        intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
+        intent.getStringExtra(ARTIST_NAME_INTENT_EXTRA) ?: throw Exception("Missing artist name")
 
 
     private fun updateUiArtistBiography(artistBiography: ArtistBiography) {
@@ -192,9 +210,5 @@ class OtherInfoWindow : Activity() {
         builder.append(textWithBold)
         builder.append("</font></div></html>")
         return builder.toString()
-    }
-
-    companion object {
-        const val ARTIST_NAME_EXTRA = ARTIST_NAME_INTENT_EXTRA
     }
 }
