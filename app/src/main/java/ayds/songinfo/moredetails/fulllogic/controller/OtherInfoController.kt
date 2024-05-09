@@ -24,12 +24,17 @@ internal class OtherInfoControllerImpl(
         Observer { value ->
             when (value) {
                 OtherInfoUiEvent.OpenBiographyUrl -> openBiographyUrl()
+                OtherInfoUiEvent.LoadArtistBiography -> getArtistBiography()
             }
         }
 
     private fun openBiographyUrl() {
         Thread {
-
+            otherInfoView.openExternalLink(otherInfoView.uiState.artistUrl)
         }.start()
+    }
+
+    private fun getArtistBiography() {
+        otherInfoModel.getArticleByArtistName(otherInfoView.uiState.artistName)
     }
 }
