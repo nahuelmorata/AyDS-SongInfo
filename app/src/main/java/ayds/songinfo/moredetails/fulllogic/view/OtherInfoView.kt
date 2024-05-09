@@ -10,9 +10,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.room.Room.databaseBuilder
+import ayds.observer.Observable
+import ayds.observer.Subject
 import ayds.songinfo.R
-import ayds.songinfo.home.model.HomeModelInjector
-import ayds.songinfo.home.view.HomeViewInjector
+import ayds.songinfo.home.view.HomeUiEvent
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
@@ -41,16 +42,21 @@ private const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 private const val ARTICLE_DB_NAME = "database-name-thename"
 
 interface OtherInfoView {
-
+    val uiState: OtherInfoUiState
+    val uiEventObservable: Observable<OtherInfoUiEvent>
 }
 
 class OtherInfoViewActivity : Activity(), OtherInfoView {
+    private val onActionSubject = Subject<OtherInfoUiEvent>()
     private lateinit var articleTextView: TextView
     private lateinit var openUrlButton: Button
     private lateinit var lastFMImageView: ImageView
     private lateinit var articleDatabase: ArticleDatabase
     private lateinit var lastFMAPI: LastFMAPI
     private lateinit var otherInfoModel: OtherInfoModel
+
+    override var uiState = OtherInfoUiState()
+    override val uiEventObservable: Observable<OtherInfoUiEvent> = onActionSubject
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
