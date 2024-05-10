@@ -35,6 +35,8 @@ internal class OtherInfoControllerImpl(
     }
 
     private fun getArtistBiography() {
-        otherInfoModel.getArticleByArtistName(otherInfoView.uiState.artistName)
+        Thread {
+            otherInfoModel.getArticleByArtistName(otherInfoView.uiState.artistName)
+        }.start()
     }
 }

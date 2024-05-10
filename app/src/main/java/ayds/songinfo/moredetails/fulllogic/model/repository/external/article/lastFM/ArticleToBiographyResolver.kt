@@ -1,6 +1,6 @@
 package ayds.songinfo.moredetails.fulllogic.model.repository.external.article.lastFM
 
-import ayds.songinfo.moredetails.fulllogic.model.entities.ArtistBiography
+import ayds.songinfo.moredetails.fulllogic.model.entities.Article.ArtistBiography
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 
