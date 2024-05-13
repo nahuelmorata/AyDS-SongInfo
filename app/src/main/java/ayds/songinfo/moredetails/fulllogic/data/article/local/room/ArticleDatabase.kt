@@ -1,4 +1,4 @@
-package ayds.songinfo.moredetails.fulllogic.model.repository.local.article.room
+package ayds.songinfo.moredetails.fulllogic.data.article.local.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

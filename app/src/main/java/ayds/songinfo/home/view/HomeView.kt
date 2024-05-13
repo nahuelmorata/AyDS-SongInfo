@@ -21,8 +21,8 @@ import ayds.songinfo.home.view.HomeUiState.Companion.DEFAULT_IMAGE
 import ayds.songinfo.utils.UtilsInjector
 import ayds.songinfo.utils.navigation.NavigationUtils
 import ayds.songinfo.utils.view.ImageLoader
-import ayds.songinfo.moredetails.fulllogic.view.ARTIST_NAME_INTENT_EXTRA
-import ayds.songinfo.moredetails.fulllogic.view.OtherInfoViewActivity
+import ayds.songinfo.moredetails.fulllogic.presentation.ARTIST_NAME_INTENT_EXTRA
+import ayds.songinfo.moredetails.fulllogic.presentation.OtherInfoViewActivity
 
 interface HomeView {
     val uiEventObservable: Observable<HomeUiEvent>

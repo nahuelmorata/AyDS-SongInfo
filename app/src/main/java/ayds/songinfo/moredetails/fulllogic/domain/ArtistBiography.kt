@@ -1,6 +1,4 @@
-package ayds.songinfo.moredetails.fulllogic.model.entities
-
-import ayds.songinfo.home.model.entities.Song
+package ayds.songinfo.moredetails.fulllogic.domain
 
 sealed class Article {
     data class ArtistBiography(
@@ -8,6 +6,4 @@ sealed class Article {
         var biography: String,
         val articleUrl: String
     ) : Article()
-
-    object ArtistBiographyEmpty : Article()
 }

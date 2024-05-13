@@ -1,7 +1,7 @@
-package ayds.songinfo.moredetails.fulllogic.model.repository.local.article.room
+package ayds.songinfo.moredetails.fulllogic.data.article.local.room
 
-import ayds.songinfo.moredetails.fulllogic.model.entities.Article.ArtistBiography
-import ayds.songinfo.moredetails.fulllogic.model.repository.local.article.ArticleLocalStorage
+import ayds.songinfo.moredetails.fulllogic.domain.Article.ArtistBiography
+import ayds.songinfo.moredetails.fulllogic.data.article.local.ArticleLocalStorage
 
 class ArticleLocalStorageRoomImpl(
     dataBase: ArticleDatabase,

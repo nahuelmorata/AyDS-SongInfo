@@ -1,6 +1,6 @@
-package ayds.songinfo.moredetails.fulllogic.model.repository.external.article.lastFM
+package ayds.songinfo.moredetails.fulllogic.data.article.external.lastFM
 
-import ayds.songinfo.moredetails.fulllogic.model.entities.Article.ArtistBiography
+import ayds.songinfo.moredetails.fulllogic.domain.Article.ArtistBiography
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 
@@ -28,6 +28,7 @@ internal class JsonArticleToBiographyResolver : ArticleToBiographyResolver {
                 )
             }
         } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
 

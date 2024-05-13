@@ -1,11 +1,10 @@
-package ayds.songinfo.moredetails.fulllogic.model.repository.local.article.room
+package ayds.songinfo.moredetails.fulllogic.data.article.local.room
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import ayds.songinfo.home.model.repository.local.spotify.room.SongEntity
 
 @Dao
 interface ArticleDao {
