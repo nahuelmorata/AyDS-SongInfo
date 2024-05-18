@@ -1,4 +1,4 @@
-package ayds.songinfo.moredetails.fulllogic.presentation
+package ayds.songinfo.moredetails.presentation
 
 import android.app.Activity
 import android.content.Intent
@@ -13,7 +13,7 @@ import ayds.observer.Subject
 import ayds.songinfo.R
 import com.squareup.picasso.Picasso
 import java.util.Locale
-import ayds.songinfo.moredetails.fulllogic.injector.OtherInfoInjector
+import ayds.songinfo.moredetails.injector.OtherInfoInjector
 
 const val ARTIST_NAME_INTENT_EXTRA = "artistName"
 private const val LASTFM_LOGO_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"

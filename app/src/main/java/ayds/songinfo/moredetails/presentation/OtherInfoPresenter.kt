@@ -1,9 +1,9 @@
-package ayds.songinfo.moredetails.fulllogic.presentation
+package ayds.songinfo.moredetails.presentation
 
 import ayds.observer.Observable
 import ayds.observer.Subject
-import ayds.songinfo.moredetails.fulllogic.domain.Article.ArtistBiography
-import ayds.songinfo.moredetails.fulllogic.domain.ArticleRepository
+import ayds.songinfo.moredetails.domain.Article.ArtistBiography
+import ayds.songinfo.moredetails.domain.ArticleRepository
 
 interface OtherInfoPresenter {
     val otherInfoObservable: Observable<OtherInfoUiState>

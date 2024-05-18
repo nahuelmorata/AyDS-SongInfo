@@ -1,9 +1,9 @@
-package ayds.songinfo.moredetails.fulllogic.data
+package ayds.songinfo.moredetails.data
 
-import ayds.songinfo.moredetails.fulllogic.data.article.local.ArticleLocalStorage
-import ayds.songinfo.moredetails.fulllogic.data.article.ArticleService
-import ayds.songinfo.moredetails.fulllogic.domain.Article.ArtistBiography
-import ayds.songinfo.moredetails.fulllogic.domain.ArticleRepository
+import ayds.songinfo.moredetails.data.article.local.ArticleLocalStorage
+import ayds.songinfo.moredetails.data.article.ArticleService
+import ayds.songinfo.moredetails.domain.Article.ArtistBiography
+import ayds.songinfo.moredetails.domain.ArticleRepository
 
 internal class ArticleRepositoryImpl(
     private val articleLocalStorage: ArticleLocalStorage,
