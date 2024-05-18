@@ -9,10 +9,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.text.HtmlCompat
-import ayds.observer.Subject
 import ayds.songinfo.R
 import com.squareup.picasso.Picasso
-import java.util.Locale
 import ayds.songinfo.moredetails.injector.OtherInfoInjector
 
 const val ARTIST_NAME_INTENT_EXTRA = "artistName"
@@ -64,7 +62,7 @@ class OtherInfoViewActivity : Activity() {
     private fun updateUiArtistBiography(otherInfoUiState: OtherInfoUiState) {
         runOnUiThread {
             updateUiArtistBiographyLASTFMLogo()
-            updateUiArtistBiographyArticle(otherInfoUiState.biographyArtist, otherInfoUiState.artistName)
+            updateUiArtistBiographyArticle(otherInfoUiState.biographyArtistHtml)
             updateUiArtistBiographyURLButton(otherInfoUiState.artistUrl)
         }
     }
@@ -73,9 +71,8 @@ class OtherInfoViewActivity : Activity() {
         Picasso.get().load(LASTFM_LOGO_URL).into(lastFMImageView)
     }
 
-    private fun updateUiArtistBiographyArticle(biographyArtist: String, artistName: String) {
-        val text = biographyArtist.replace("\\n", "\n")
-        articleTextView.text = Html.fromHtml(textToHtml(text, artistName), HtmlCompat.FROM_HTML_MODE_LEGACY)
+    private fun updateUiArtistBiographyArticle(biographyArtist: String) {
+        articleTextView.text = Html.fromHtml(biographyArtist, HtmlCompat.FROM_HTML_MODE_LEGACY)
     }
 
     private fun updateUiArtistBiographyURLButton(artistUrl: String) {
@@ -88,21 +85,5 @@ class OtherInfoViewActivity : Activity() {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setData(Uri.parse(url))
         startActivity(intent)
-    }
-
-    private fun textToHtml(text: String, term: String): String {
-        val builder = StringBuilder()
-        builder.append("<html><div width=400>")
-        builder.append("<font face=\"arial\">")
-        val textWithBold = text
-            .replace("'", " ")
-            .replace("\n", "<br>")
-            .replace(
-                "(?i)$term".toRegex(),
-                "<b>" + term.uppercase(Locale.getDefault()) + "</b>"
-            )
-        builder.append(textWithBold)
-        builder.append("</font></div></html>")
-        return builder.toString()
     }
 }

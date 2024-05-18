@@ -13,17 +13,15 @@ internal class ArticleRepositoryImpl(
         val dbArtistBiography = articleLocalStorage.getArticleByArtistName(artistName)
         val artistBiography: ArtistBiography?
 
-        when {
-            dbArtistBiography != null -> artistBiography = dbArtistBiography.apply { markItAsLocal(dbArtistBiography) }
-            else -> {
-                artistBiography = articleService.getArticle(artistName)
-
-                artistBiography?.let {
-                    when {
-                        it.isSavedSong() -> articleLocalStorage.updateArticle(artistName, it)
-                        else -> articleLocalStorage.insertArticle(artistName, it)
-                    }
-                }
+        if (dbArtistBiography != null)
+            artistBiography = dbArtistBiography.apply { markItAsLocal(dbArtistBiography) }
+        else {
+            artistBiography = articleService.getArticle(artistName)
+            artistBiography?.let {
+                if (it.isSavedSong())
+                    articleLocalStorage.updateArticle(artistName, it)
+                else
+                    articleLocalStorage.insertArticle(artistName, it)
             }
         }
 
@@ -33,6 +31,6 @@ internal class ArticleRepositoryImpl(
     private fun ArtistBiography.isSavedSong() = articleLocalStorage.getArticleByArtistName(this.name) != null
 
     private fun markItAsLocal(artistBiography: ArtistBiography) {
-        artistBiography.biography = "[*]${artistBiography.biography}"
+        artistBiography.isStoredLocally = true
     }
 }

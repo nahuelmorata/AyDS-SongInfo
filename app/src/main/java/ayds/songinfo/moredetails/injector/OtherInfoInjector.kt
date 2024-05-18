@@ -8,6 +8,7 @@ import ayds.songinfo.moredetails.data.article.external.LastFMArticleAPI
 import ayds.songinfo.moredetails.data.article.external.LastFMArticleServiceImpl
 import ayds.songinfo.moredetails.data.article.local.room.ArticleDatabase
 import ayds.songinfo.moredetails.data.article.local.room.ArticleLocalStorageRoomImpl
+import ayds.songinfo.moredetails.presentation.OtherInfoDescriptionHelperImpl
 import ayds.songinfo.moredetails.presentation.OtherInfoPresenter
 import ayds.songinfo.moredetails.presentation.OtherInfoPresenterImpl
 import retrofit2.Retrofit
@@ -37,6 +38,8 @@ object OtherInfoInjector {
 
         val repository = ArticleRepositoryImpl(articleLocalStorage, lastFMArticleServiceImpl)
 
-        presenter = OtherInfoPresenterImpl(repository)
+        val otherInfoDescriptionHelper = OtherInfoDescriptionHelperImpl()
+
+        presenter = OtherInfoPresenterImpl(repository, otherInfoDescriptionHelper)
     }
 }
