@@ -1,7 +1,7 @@
-package ayds.songinfo.moredetails.fulllogic.data.article.external.lastFM
+package ayds.songinfo.moredetails.data.article.external
 
-import ayds.songinfo.moredetails.fulllogic.domain.Article.ArtistBiography
-import ayds.songinfo.moredetails.fulllogic.data.article.ArticleService
+import ayds.songinfo.moredetails.domain.Article.ArtistBiography
+import ayds.songinfo.moredetails.data.article.ArticleService
 import retrofit2.Response
 
 internal class LastFMArticleServiceImpl(

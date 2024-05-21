@@ -1,6 +1,6 @@
-package ayds.songinfo.moredetails.fulllogic.data.article.local
+package ayds.songinfo.moredetails.data.article.local
 
-import ayds.songinfo.moredetails.fulllogic.domain.Article.ArtistBiography
+import ayds.songinfo.moredetails.domain.Article.ArtistBiography
 
 interface ArticleLocalStorage {
     fun updateArticle(artistName: String, article: ArtistBiography)

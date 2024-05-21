@@ -1,9 +1,9 @@
-package ayds.songinfo.moredetails.fulllogic.presentation
+package ayds.songinfo.moredetails.presentation
 
 import ayds.observer.Observable
 import ayds.observer.Subject
-import ayds.songinfo.moredetails.fulllogic.domain.Article.ArtistBiography
-import ayds.songinfo.moredetails.fulllogic.domain.ArticleRepository
+import ayds.songinfo.moredetails.domain.Article.ArtistBiography
+import ayds.songinfo.moredetails.domain.ArticleRepository
 
 interface OtherInfoPresenter {
     val otherInfoObservable: Observable<OtherInfoUiState>
@@ -12,7 +12,8 @@ interface OtherInfoPresenter {
 }
 
 internal class OtherInfoPresenterImpl(
-    private val articleRepository: ArticleRepository
+    private val articleRepository: ArticleRepository,
+    private val otherInfoDescriptionHelper: OtherInfoDescriptionHelper
 ) : OtherInfoPresenter {
     override val otherInfoObservable = Subject<OtherInfoUiState>()
 
@@ -24,7 +25,7 @@ internal class OtherInfoPresenterImpl(
 
     private fun ArtistBiography.toUiState() = OtherInfoUiState(
         this.name,
-        this.biography,
+        otherInfoDescriptionHelper.getDescription(this),
         articleUrl
     )
 }

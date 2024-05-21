@@ -1,6 +1,6 @@
-package ayds.songinfo.moredetails.fulllogic.data.article.external.lastFM
+package ayds.songinfo.moredetails.data.article.external
 
-import ayds.songinfo.moredetails.fulllogic.domain.Article.ArtistBiography
+import ayds.songinfo.moredetails.domain.Article.ArtistBiography
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 
