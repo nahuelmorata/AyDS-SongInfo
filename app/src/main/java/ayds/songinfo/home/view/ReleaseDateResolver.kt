@@ -27,7 +27,7 @@ internal class ReleaseDateYearResolverImpl(
     override val song: SpotifySong
 ) : ReleaseDateResolver {
     override fun format(): String =
-        "$song.releaseDate (${if (isLeapYear(song.releaseDate.toInt())) "" else "not "}a leap year)"
+        "${song.releaseDate} (${if (isLeapYear(song.releaseDate.toInt())) "" else "not a "}leap year)"
 
     private fun isLeapYear(year: Int): Boolean =
         (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))

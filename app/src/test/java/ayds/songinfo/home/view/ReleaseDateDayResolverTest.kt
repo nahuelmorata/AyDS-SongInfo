@@ -10,7 +10,7 @@ class ReleaseDateDayResolverTest {
     @Test
     fun `on get release date should return day 1`() {
         val releaseDateDayResolver =
-            ReleaseDateYearResolverImpl(mockk { every { releaseDate } returns "1992-02-01" })
+            ReleaseDateDayResolverImpl(mockk { every { releaseDate } returns "1992-02-01" })
 
         val result = releaseDateDayResolver.format()
 

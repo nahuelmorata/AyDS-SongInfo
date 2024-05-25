@@ -3,10 +3,10 @@ package ayds.songinfo.home.model.repository
 import ayds.songinfo.home.model.entities.Song.EmptySong
 import ayds.songinfo.home.model.entities.Song.SpotifySong
 import ayds.songinfo.home.model.repository.external.spotify.SpotifyTrackService
-import ayds.songinfo.home.model.repository.local.spotify.SpotifyLocalStorage
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import ayds.songinfo.home.model.repository.local.spotify.SpotifyLocalStorage
+import io.mockk.every
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -56,7 +56,7 @@ class SongRepositoryTest {
         val song =
             SpotifySong("id", "name", "artist", "album", "date", "url", "image", "image", false)
         every { spotifyLocalStorage.getSongByTerm("term") } returns null
-        every { spotifyTrackService.getSong("term") } returns song
+        every { spotifyTrackService.getSong("teurm") } returns song
         every { spotifyLocalStorage.getSongById("id") } returns null
 
         val result = songRepository.getSongByTerm("term")
