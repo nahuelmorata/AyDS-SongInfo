@@ -7,4 +7,6 @@ sealed class Article {
         val articleUrl: String,
         var isStoredLocally: Boolean = false
     ) : Article()
+
+    object EmptyArtistData : Article()
 }

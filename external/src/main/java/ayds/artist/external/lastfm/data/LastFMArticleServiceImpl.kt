@@ -1,14 +1,12 @@
-package ayds.songinfo.moredetails.data.article.external
+package ayds.artist.external.lastfm.data
 
-import ayds.songinfo.moredetails.domain.Article.ArtistBiography
-import ayds.songinfo.moredetails.data.article.ArticleService
 import retrofit2.Response
 
 internal class LastFMArticleServiceImpl(
     private val lastFMArticleAPI: LastFMArticleAPI,
-    private val articleToBiographyResolver: ArticleToBiographyResolver,
-) : ArticleService {
-    override fun getArticle(artistName: String): ArtistBiography? {
+    private val articleToBiographyResolver: LastFMToBiographyResolver,
+) : LastFMService {
+    override fun getArticle(artistName: String): LastFMArticle? {
         val callResponse = getArticleFromService(artistName)
         return articleToBiographyResolver.getArtistBiographyFromExternalData(callResponse.body(), artistName)
     }

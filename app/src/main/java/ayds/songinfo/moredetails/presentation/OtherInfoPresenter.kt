@@ -2,6 +2,7 @@ package ayds.songinfo.moredetails.presentation
 
 import ayds.observer.Observable
 import ayds.observer.Subject
+import ayds.songinfo.moredetails.domain.Article
 import ayds.songinfo.moredetails.domain.Article.ArtistBiography
 import ayds.songinfo.moredetails.domain.ArticleRepository
 
@@ -19,7 +20,8 @@ internal class OtherInfoPresenterImpl(
 
     override fun getArtistBiography(artistName: String) {
         val artistBiography = articleRepository.getArticleByArtistName(artistName)
-        val uiState = artistBiography.toUiState()
+        val uiState = if (artistBiography == Article.EmptyArtistData) OtherInfoUiState()
+            else (artistBiography as ArtistBiography).toUiState()
         otherInfoObservable.notify(uiState)
     }
 

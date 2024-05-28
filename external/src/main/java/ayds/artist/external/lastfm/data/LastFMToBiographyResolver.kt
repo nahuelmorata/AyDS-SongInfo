@@ -1,14 +1,13 @@
-package ayds.songinfo.moredetails.data.article.external
+package ayds.artist.external.lastfm.data
 
-import ayds.songinfo.moredetails.domain.Article.ArtistBiography
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 
-interface ArticleToBiographyResolver {
+interface LastFMToBiographyResolver {
     fun getArtistBiographyFromExternalData(
         serviceData: String?,
         artistName: String
-    ): ArtistBiography?
+    ): LastFMArticle
 }
 
 private const val ARTIST_KEY_JSON = "artist"
@@ -16,21 +15,21 @@ private const val ARTIST_BIO_KEY_JSON = "bio"
 private const val ARTIST_CONTENT_KEY_JSON = "content"
 private const val ARTIST_URL_KEY_JSON = "url"
 
-internal class JsonArticleToBiographyResolver : ArticleToBiographyResolver {
+internal class JsonLastFMToBiographyResolver : LastFMToBiographyResolver {
     override fun getArtistBiographyFromExternalData(
         serviceData: String?,
         artistName: String
-    ): ArtistBiography? =
+    ): LastFMArticle =
         try {
             serviceData?.getArtistObject()?.let { artistObject ->
-                ArtistBiography(
+                LastFMArticle.LastFMArticleWithData(
                     artistName, artistObject.getBiography(), artistObject.getArticleUrl()
                 )
             }
         } catch (e: Exception) {
             e.printStackTrace()
             null
-        }
+        } ?: LastFMArticle.LastFMArticleWithoutData
 
     private fun String?.getArtistObject(): JsonObject {
         val jobj = Gson().fromJson(this, JsonObject::class.java)

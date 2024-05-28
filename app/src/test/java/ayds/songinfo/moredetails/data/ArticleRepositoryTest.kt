@@ -1,7 +1,6 @@
 package ayds.songinfo.moredetails.data
 
-import ayds.songinfo.home.model.entities.Song
-import ayds.songinfo.moredetails.data.article.ArticleService
+import ayds.artist.external.lastfm.data.ArticleService
 import ayds.songinfo.moredetails.data.article.local.ArticleLocalStorage
 import ayds.songinfo.moredetails.domain.Article
 import ayds.songinfo.moredetails.domain.ArticleRepository
@@ -15,7 +14,7 @@ import org.junit.Test
 
 class ArticleRepositoryTest {
     private val articleLocalStorage: ArticleLocalStorage = mockk(relaxUnitFun = true)
-    private val articleService: ArticleService = mockk(relaxUnitFun = true)
+    private val articleService: ayds.artist.external.lastfm.data.ArticleService = mockk(relaxUnitFun = true)
 
     private val articleRepository: ArticleRepository =
         ArticleRepositoryImpl(articleLocalStorage, articleService)
