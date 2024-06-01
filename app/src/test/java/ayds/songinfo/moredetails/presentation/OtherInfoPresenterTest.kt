@@ -1,14 +1,14 @@
 package ayds.songinfo.moredetails.presentation
 
-import ayds.songinfo.moredetails.domain.Article
-import ayds.songinfo.moredetails.domain.ArticleRepository
+import ayds.songinfo.moredetails.domain.Card
+import ayds.songinfo.moredetails.domain.CardRepository
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Test
 
 class OtherInfoPresenterTest {
-    private val articleRepository: ArticleRepository = mockk()
+    private val articleRepository: CardRepository = mockk()
     private val otherInfoDescriptionHelper: OtherInfoDescriptionHelper = OtherInfoDescriptionHelperImpl()
 
     private val otherInfoDescriptionPresenter = OtherInfoPresenterImpl(
@@ -17,13 +17,13 @@ class OtherInfoPresenterTest {
 
     @Test
     fun `get artist by name should notify by observable`() {
-        val article = Article.ArtistBiography(
+        val article = Card.ArtistBiography(
             "name",
             "biography",
             "article",
             false,
         )
-        every { articleRepository.getArticleByArtistName("name") } returns article
+        every { articleRepository.getCard("name") } returns article
 
         otherInfoDescriptionPresenter.getArtistBiography("name")
         otherInfoDescriptionPresenter.otherInfoObservable.subscribe { state ->

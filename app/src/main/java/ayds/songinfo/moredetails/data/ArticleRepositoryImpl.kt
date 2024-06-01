@@ -3,26 +3,25 @@ package ayds.songinfo.moredetails.data
 import ayds.artist.external.lastfm.data.LastFMArticle
 import ayds.artist.external.lastfm.data.LastFMService
 import ayds.songinfo.moredetails.data.article.local.ArticleLocalStorage
-import ayds.songinfo.moredetails.domain.Article
-import ayds.songinfo.moredetails.domain.Article.ArtistBiography
-import ayds.songinfo.moredetails.domain.ArticleRepository
+import ayds.songinfo.moredetails.domain.CardRepository
+import ayds.songinfo.moredetails.domain.Cards
 
 internal class ArticleRepositoryImpl(
     private val articleLocalStorage: ArticleLocalStorage,
     private val articleService: LastFMService,
     private val lastFMArticleToBiographyMapper: LastFMArticleToBiographyMapper
-) : ArticleRepository {
-    override fun getArticleByArtistName(artistName: String): Article {
+) : CardRepository {
+    override fun getCard(artistName: String): Cards {
         val dbArtistBiography = articleLocalStorage.getArticleByArtistName(artistName)
-        val artistBiography: ArtistBiography?
+        val card: Cards.Card?
 
         if (dbArtistBiography != null)
-            artistBiography = dbArtistBiography.apply { markItAsLocal(dbArtistBiography) }
+            card = dbArtistBiography.apply { markItAsLocal(dbArtistBiography) }
         else {
             val lastFMArticle = articleService.getArticle(artistName)
-            artistBiography = if (lastFMArticle == LastFMArticle.LastFMArticleWithoutData) null
+            card = if (lastFMArticle == LastFMArticle.LastFMArticleWithoutData) null
                 else lastFMArticleToBiographyMapper.getBiographyFromArticle(lastFMArticle as LastFMArticle.LastFMArticleWithData)
-            artistBiography?.let {
+            card?.let {
                 if (it.isSavedSong())
                     articleLocalStorage.updateArticle(artistName, it)
                 else
@@ -30,12 +29,12 @@ internal class ArticleRepositoryImpl(
             }
         }
 
-        return artistBiography ?: Article.EmptyArtistData
+        return card ?: Cards.EmptyCard
     }
 
-    private fun ArtistBiography.isSavedSong() = articleLocalStorage.getArticleByArtistName(this.name) != null
+    private fun Cards.Card.isSavedSong() = articleLocalStorage.getArticleByArtistName(this.name) != null
 
-    private fun markItAsLocal(artistBiography: ArtistBiography) {
-        artistBiography.isStoredLocally = true
+    private fun markItAsLocal(card: Cards.Card) {
+        card.isStoredLocally = true
     }
 }

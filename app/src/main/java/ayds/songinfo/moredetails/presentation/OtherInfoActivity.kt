@@ -14,7 +14,6 @@ import com.squareup.picasso.Picasso
 import ayds.songinfo.moredetails.injector.OtherInfoInjector
 
 const val ARTIST_NAME_INTENT_EXTRA = "artistName"
-private const val LASTFM_LOGO_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
 
 class OtherInfoViewActivity : Activity() {
     private lateinit var articleTextView: TextView
@@ -61,14 +60,14 @@ class OtherInfoViewActivity : Activity() {
 
     private fun updateUiArtistBiography(otherInfoUiState: OtherInfoUiState) {
         runOnUiThread {
-            updateUiArtistBiographyLASTFMLogo()
+            updateUiArtistBiographyLogo(otherInfoUiState.logoUrl)
             updateUiArtistBiographyArticle(otherInfoUiState.biographyArtistHtml)
             updateUiArtistBiographyURLButton(otherInfoUiState.artistUrl)
         }
     }
 
-    private fun updateUiArtistBiographyLASTFMLogo() {
-        Picasso.get().load(LASTFM_LOGO_URL).into(lastFMImageView)
+    private fun updateUiArtistBiographyLogo(logoUrl: String) {
+        Picasso.get().load(logoUrl).into(lastFMImageView)
     }
 
     private fun updateUiArtistBiographyArticle(biographyArtist: String) {

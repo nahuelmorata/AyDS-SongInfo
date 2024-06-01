@@ -2,8 +2,8 @@ package ayds.songinfo.moredetails.data
 
 import ayds.artist.external.lastfm.data.ArticleService
 import ayds.songinfo.moredetails.data.article.local.ArticleLocalStorage
-import ayds.songinfo.moredetails.domain.Article
-import ayds.songinfo.moredetails.domain.ArticleRepository
+import ayds.songinfo.moredetails.domain.Card
+import ayds.songinfo.moredetails.domain.CardRepository
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Assert.assertEquals
@@ -16,13 +16,13 @@ class ArticleRepositoryTest {
     private val articleLocalStorage: ArticleLocalStorage = mockk(relaxUnitFun = true)
     private val articleService: ayds.artist.external.lastfm.data.ArticleService = mockk(relaxUnitFun = true)
 
-    private val articleRepository: ArticleRepository =
+    private val articleRepository: CardRepository =
         ArticleRepositoryImpl(articleLocalStorage, articleService)
 
     @Test
     fun `given existing article by artist name should return article and mark it as local`() {
         val article =
-            Article.ArtistBiography(
+            Card.ArtistBiography(
                 "name",
                 "biography",
                 "url",
@@ -30,7 +30,7 @@ class ArticleRepositoryTest {
             )
         every { articleLocalStorage.getArticleByArtistName("name") } returns article
 
-        val result = articleRepository.getArticleByArtistName("name")
+        val result = articleRepository.getCard("name")
 
         assertEquals(article, result)
         assertTrue(article.isStoredLocally)
@@ -39,7 +39,7 @@ class ArticleRepositoryTest {
     @Test
     fun `given non existing song by term should get the song and store it`() {
         val article =
-            Article.ArtistBiography(
+            Card.ArtistBiography(
                 "name",
                 "biography",
                 "url",
@@ -48,7 +48,7 @@ class ArticleRepositoryTest {
         every { articleLocalStorage.getArticleByArtistName("name") } returns null
         every { articleService.getArticle("name") } returns article
 
-        val result = articleRepository.getArticleByArtistName("name")
+        val result = articleRepository.getCard("name")
 
         assertEquals(article, result)
         assertFalse(article.isStoredLocally)
@@ -60,7 +60,7 @@ class ArticleRepositoryTest {
         every { articleLocalStorage.getArticleByArtistName("name") } returns null
         every { articleService.getArticle("name") } returns null
 
-        val result = articleRepository.getArticleByArtistName("name")
+        val result = articleRepository.getCard("name")
 
         assertEquals("", result.biography)
     }

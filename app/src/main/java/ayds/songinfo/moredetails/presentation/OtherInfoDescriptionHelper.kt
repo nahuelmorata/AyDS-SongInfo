@@ -1,10 +1,10 @@
 package ayds.songinfo.moredetails.presentation
 
-import ayds.songinfo.moredetails.domain.Article.ArtistBiography
+import ayds.songinfo.moredetails.domain.Cards
 import java.util.Locale
 
 interface OtherInfoDescriptionHelper {
-    fun getDescription(artistBiography: ArtistBiography): String
+    fun getDescription(artistBiography: Cards.Card): String
 }
 
 private const val HEADER_HTML = "<html><div width=400><font face=\"arial\">"
@@ -12,14 +12,14 @@ private const val HEADER_HTML = "<html><div width=400><font face=\"arial\">"
 private const val FOOTER_HTML = "</font></div></html>"
 
 internal class OtherInfoDescriptionHelperImpl : OtherInfoDescriptionHelper {
-    override fun getDescription(artistBiography: ArtistBiography): String {
+    override fun getDescription(artistBiography: Cards.Card): String {
         val text = getFormattedDescription(artistBiography)
         return textToHtml(text, artistBiography.name)
     }
 
-    private fun getFormattedDescription(artistBiography: ArtistBiography): String {
+    private fun getFormattedDescription(artistBiography: Cards.Card): String {
         val prefix = if (artistBiography.isStoredLocally) "[*]" else ""
-        val text = artistBiography.biography.replace("\\n", "\n")
+        val text = artistBiography.description.replace("\\n", "\n")
         return "$prefix$text"
     }
 
