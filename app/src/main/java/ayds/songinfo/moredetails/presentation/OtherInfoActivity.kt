@@ -16,7 +16,7 @@ import ayds.songinfo.moredetails.injector.OtherInfoInjector
 const val ARTIST_NAME_INTENT_EXTRA = "artistName"
 
 class OtherInfoViewActivity : Activity() {
-    private lateinit var articleTextView: TextView
+    private lateinit var descriptionTextView: TextView
     private lateinit var openUrlButton: Button
     private lateinit var lastFMImageView: ImageView
 
@@ -29,7 +29,7 @@ class OtherInfoViewActivity : Activity() {
         initViewProperties()
         initPresenter()
         initObservers()
-        getArtistBiographyAsync()
+        getCardAsync()
     }
 
     private fun initPresenter() {
@@ -38,19 +38,19 @@ class OtherInfoViewActivity : Activity() {
     }
 
     private fun initViewProperties() {
-        articleTextView = findViewById(R.id.textPane1)
+        descriptionTextView = findViewById(R.id.textPane1)
         openUrlButton = findViewById(R.id.openUrlButton1)
         lastFMImageView = findViewById(R.id.imageView1)
     }
 
     private fun initObservers() {
         presenter.otherInfoObservable
-            .subscribe { value -> updateUiArtistBiography(value) }
+            .subscribe { value -> updateUiCard(value) }
     }
 
-    private fun getArtistBiographyAsync() {
+    private fun getCardAsync() {
         Thread {
-            presenter.getArtistBiography(getArtistName())
+            presenter.getCard(getArtistName())
         }.start()
     }
 
@@ -58,25 +58,25 @@ class OtherInfoViewActivity : Activity() {
         intent.getStringExtra(ARTIST_NAME_INTENT_EXTRA) ?: throw Exception("Missing artist name")
 
 
-    private fun updateUiArtistBiography(otherInfoUiState: OtherInfoUiState) {
+    private fun updateUiCard(otherInfoUiState: OtherInfoUiState) {
         runOnUiThread {
-            updateUiArtistBiographyLogo(otherInfoUiState.logoUrl)
-            updateUiArtistBiographyArticle(otherInfoUiState.biographyArtistHtml)
-            updateUiArtistBiographyURLButton(otherInfoUiState.artistUrl)
+            updateUiCardLogo(otherInfoUiState.logoUrl)
+            updateUiCardDescription(otherInfoUiState.descriptionHtml)
+            updateUiCardInfoUrlButton(otherInfoUiState.infoUrl)
         }
     }
 
-    private fun updateUiArtistBiographyLogo(logoUrl: String) {
+    private fun updateUiCardLogo(logoUrl: String) {
         Picasso.get().load(logoUrl).into(lastFMImageView)
     }
 
-    private fun updateUiArtistBiographyArticle(biographyArtist: String) {
-        articleTextView.text = Html.fromHtml(biographyArtist, HtmlCompat.FROM_HTML_MODE_LEGACY)
+    private fun updateUiCardDescription(description: String) {
+        descriptionTextView.text = Html.fromHtml(description, HtmlCompat.FROM_HTML_MODE_LEGACY)
     }
 
-    private fun updateUiArtistBiographyURLButton(artistUrl: String) {
+    private fun updateUiCardInfoUrlButton(infoUrl: String) {
         openUrlButton.setOnClickListener {
-            navigateToUrl(artistUrl)
+            navigateToUrl(infoUrl)
         }
     }
 

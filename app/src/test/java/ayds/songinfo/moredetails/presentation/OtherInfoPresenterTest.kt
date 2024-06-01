@@ -25,10 +25,10 @@ class OtherInfoPresenterTest {
         )
         every { articleRepository.getCard("name") } returns article
 
-        otherInfoDescriptionPresenter.getArtistBiography("name")
+        otherInfoDescriptionPresenter.getCard("name")
         otherInfoDescriptionPresenter.otherInfoObservable.subscribe { state ->
             Assert.assertEquals("name", state.artistName)
-            Assert.assertEquals("article", state.artistUrl)
+            Assert.assertEquals("article", state.infoUrl)
         }
     }
 }

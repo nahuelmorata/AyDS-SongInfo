@@ -2,17 +2,17 @@ package ayds.songinfo.moredetails.injector
 
 import android.content.Context
 import androidx.room.Room
-import ayds.songinfo.moredetails.data.ArticleRepositoryImpl
+import ayds.songinfo.moredetails.data.CardRepositoryImpl
 import ayds.artist.external.lastfm.injector.LastFMInjector
-import ayds.songinfo.moredetails.data.LastFMArticleToBiographyMapperImpl
-import ayds.songinfo.moredetails.data.article.local.room.ArticleDatabase
-import ayds.songinfo.moredetails.data.article.local.room.ArticleLocalStorageRoomImpl
+import ayds.songinfo.moredetails.data.LastFMArticleToCardMapperImpl
+import ayds.songinfo.moredetails.data.card.local.room.CardDatabase
+import ayds.songinfo.moredetails.data.card.local.room.CardLocalStorageRoomImpl
 import ayds.songinfo.moredetails.presentation.OtherInfoDescriptionHelperImpl
 import ayds.songinfo.moredetails.presentation.OtherInfoPresenter
 import ayds.songinfo.moredetails.presentation.OtherInfoPresenterImpl
 
 
-private const val ARTICLE_DATABASE_NAME = "article-database"
+private const val CARD_DATABASE_NAME = "card-database"
 
 object OtherInfoInjector {
     lateinit var presenter: OtherInfoPresenter
@@ -20,13 +20,13 @@ object OtherInfoInjector {
     fun initGraph(context: Context) {
         val dataBase = Room.databaseBuilder(
             context,
-            ArticleDatabase::class.java, ARTICLE_DATABASE_NAME
+            CardDatabase::class.java, CARD_DATABASE_NAME
         ).build()
 
-        val articleLocalStorage = ArticleLocalStorageRoomImpl(dataBase)
-        val articleToBiographyMapper = LastFMArticleToBiographyMapperImpl()
+        val cardLocalStorage = CardLocalStorageRoomImpl(dataBase)
+        val articleToCardMapper = LastFMArticleToCardMapperImpl()
 
-        val repository = ArticleRepositoryImpl(articleLocalStorage, LastFMInjector.lastFMService, articleToBiographyMapper)
+        val repository = CardRepositoryImpl(cardLocalStorage, LastFMInjector.lastFMService, articleToCardMapper)
 
         val otherInfoDescriptionHelper = OtherInfoDescriptionHelperImpl()
 

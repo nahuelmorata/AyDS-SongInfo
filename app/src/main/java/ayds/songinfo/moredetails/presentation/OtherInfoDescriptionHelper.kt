@@ -4,7 +4,7 @@ import ayds.songinfo.moredetails.domain.Cards
 import java.util.Locale
 
 interface OtherInfoDescriptionHelper {
-    fun getDescription(artistBiography: Cards.Card): String
+    fun getDescription(card: Cards.Card): String
 }
 
 private const val HEADER_HTML = "<html><div width=400><font face=\"arial\">"
@@ -12,14 +12,14 @@ private const val HEADER_HTML = "<html><div width=400><font face=\"arial\">"
 private const val FOOTER_HTML = "</font></div></html>"
 
 internal class OtherInfoDescriptionHelperImpl : OtherInfoDescriptionHelper {
-    override fun getDescription(artistBiography: Cards.Card): String {
-        val text = getFormattedDescription(artistBiography)
-        return textToHtml(text, artistBiography.name)
+    override fun getDescription(card: Cards.Card): String {
+        val text = getFormattedDescription(card)
+        return textToHtml(text, card.name)
     }
 
-    private fun getFormattedDescription(artistBiography: Cards.Card): String {
-        val prefix = if (artistBiography.isStoredLocally) "[*]" else ""
-        val text = artistBiography.description.replace("\\n", "\n")
+    private fun getFormattedDescription(card: Cards.Card): String {
+        val prefix = if (card.isStoredLocally) "[*]" else ""
+        val text = card.description.replace("\\n", "\n")
         return "$prefix$text"
     }
 

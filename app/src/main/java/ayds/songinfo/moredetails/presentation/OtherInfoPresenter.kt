@@ -8,7 +8,7 @@ import ayds.songinfo.moredetails.domain.Cards
 interface OtherInfoPresenter {
     val otherInfoObservable: Observable<OtherInfoUiState>
 
-    fun getArtistBiography(artistName: String)
+    fun getCard(name: String)
 }
 
 internal class OtherInfoPresenterImpl(
@@ -17,10 +17,10 @@ internal class OtherInfoPresenterImpl(
 ) : OtherInfoPresenter {
     override val otherInfoObservable = Subject<OtherInfoUiState>()
 
-    override fun getArtistBiography(artistName: String) {
-        val artistBiography = articleRepository.getCard(artistName)
-        val uiState = if (artistBiography == Cards.EmptyCard) OtherInfoUiState()
-            else (artistBiography as Cards.Card).toUiState()
+    override fun getCard(name: String) {
+        val card = articleRepository.getCard(name)
+        val uiState = if (card == Cards.EmptyCard) OtherInfoUiState()
+            else (card as Cards.Card).toUiState()
         otherInfoObservable.notify(uiState)
     }
 
@@ -28,6 +28,6 @@ internal class OtherInfoPresenterImpl(
         this.name,
         otherInfoDescriptionHelper.getDescription(this),
         infoUrl,
-        sourceLogoUrl ?: ""
+        sourceLogoUrl ?: "",
     )
 }
