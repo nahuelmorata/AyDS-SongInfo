@@ -5,6 +5,11 @@ import androidx.room.Room
 import ayds.songinfo.moredetails.data.CardRepositoryImpl
 import ayds.artist.external.lastfm.injector.LastFMInjector
 import ayds.songinfo.moredetails.data.LastFMArticleToCardMapperImpl
+import ayds.songinfo.moredetails.data.card.broker.CardBrokerImpl
+import ayds.songinfo.moredetails.data.card.broker.Proxy
+import ayds.songinfo.moredetails.data.card.broker.proxy.LastFmProxy
+import ayds.songinfo.moredetails.data.card.broker.proxy.NYTimesProxy
+import ayds.songinfo.moredetails.data.card.broker.proxy.WikipediaProxy
 import ayds.songinfo.moredetails.data.card.local.room.CardDatabase
 import ayds.songinfo.moredetails.data.card.local.room.CardLocalStorageRoomImpl
 import ayds.songinfo.moredetails.presentation.OtherInfoDescriptionHelperImpl
@@ -25,8 +30,10 @@ object OtherInfoInjector {
 
         val cardLocalStorage = CardLocalStorageRoomImpl(dataBase)
         val articleToCardMapper = LastFMArticleToCardMapperImpl()
+        val proxies = listOf(LastFmProxy(), NYTimesProxy(), WikipediaProxy())
+        val cardBroker = CardBrokerImpl(proxies)
 
-        val repository = CardRepositoryImpl(cardLocalStorage, LastFMInjector.lastFMService, articleToCardMapper)
+        val repository = CardRepositoryImpl(cardLocalStorage, LastFMInjector.lastFMService, articleToCardMapper, cardBroker)
 
         val otherInfoDescriptionHelper = OtherInfoDescriptionHelperImpl()
 
