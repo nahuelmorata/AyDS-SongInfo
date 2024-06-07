@@ -1,6 +1,7 @@
 package ayds.songinfo.moredetails.presentation
 
-import ayds.songinfo.moredetails.domain.Card
+import ayds.songinfo.moredetails.domain.CardSource
+import ayds.songinfo.moredetails.domain.Cards
 import org.junit.Assert
 import org.junit.Test
 
@@ -9,11 +10,11 @@ class OtherInfoDescriptionHelperTest {
 
     @Test
     fun `given a article it should has header and footer of html`() {
-        val article = Card.ArtistBiography(
+        val article = Cards.Card(
             "name",
             "biography",
             "article",
-            false,
+            CardSource.LastFm,
         )
 
         val result = otherInfoDescriptionHelper.getDescription(article)
@@ -25,11 +26,11 @@ class OtherInfoDescriptionHelperTest {
 
     @Test
     fun `given a local article it should has local mark, header and footer of html`() {
-        val article = Card.ArtistBiography(
+        val article = Cards.Card(
             "name",
             "biography",
             "article",
-            true,
+            CardSource.LastFm,
         )
 
         val result = otherInfoDescriptionHelper.getDescription(article)

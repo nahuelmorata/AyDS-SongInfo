@@ -18,16 +18,22 @@ internal class OtherInfoPresenterImpl(
     override val otherInfoObservable = Subject<OtherInfoUiState>()
 
     override fun getCard(name: String) {
-        val card = articleRepository.getCard(name)
-        val uiState = if (card == Cards.EmptyCard) OtherInfoUiState()
-            else (card as Cards.Card).toUiState()
+        val cards = articleRepository.getCards(name)
+        val uiState = cards.toUiState()
         otherInfoObservable.notify(uiState)
     }
 
-    private fun Cards.Card.toUiState() = OtherInfoUiState(
-        this.name,
-        otherInfoDescriptionHelper.getDescription(this),
-        infoUrl,
-        sourceLogoUrl ?: "",
+    private fun List<Cards>.toUiState() = OtherInfoUiState(
+        cards = map {
+            card -> when (card) {
+                is Cards.Card -> OtherInfoCardUiState(
+                    card.name,
+                    otherInfoDescriptionHelper.getDescription(card),
+                    card.infoUrl,
+                    card.sourceLogoUrl ?: "",
+                )
+                is Cards.EmptyCard -> OtherInfoCardUiState()
+            }
+        }
     )
 }

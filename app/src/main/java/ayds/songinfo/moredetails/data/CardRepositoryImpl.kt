@@ -13,27 +13,6 @@ internal class CardRepositoryImpl(
     private val lastFMArticleToCardMapper: LastFMArticleToCardMapper,
     private val cardBroker: CardBroker
 ) : CardRepository {
-    override fun getCard(artistName: String): Cards {
-        val dbArtistBiography = cardLocalStorage.getCardByName(artistName)
-        val card: Cards.Card?
-
-        if (dbArtistBiography != null)
-            card = dbArtistBiography.apply { markItAsLocal(dbArtistBiography) }
-        else {
-            val lastFMArticle = cardService.getArticle(artistName)
-            card = if (lastFMArticle == LastFMArticle.LastFMArticleWithoutData) null
-                else lastFMArticleToCardMapper.getCardFromArticle(lastFMArticle as LastFMArticle.LastFMArticleWithData)
-            card?.let {
-                if (it.isSavedSong())
-                    cardLocalStorage.updateCard(artistName, it)
-                else
-                    cardLocalStorage.insertCard(artistName, it)
-            }
-        }
-
-        return card ?: Cards.EmptyCard
-    }
-
     override fun getCards(artistName: String): List<Cards> {
         return cardBroker.getCards(artistName)
     }
