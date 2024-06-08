@@ -8,12 +8,12 @@ import ayds.songinfo.moredetails.domain.CardSource
 import ayds.songinfo.moredetails.domain.Cards
 
 internal class LastFmProxy : Proxy {
-    override fun getCard(artistName: String): Cards =
-        LastFMInjector.lastFMService.getArticle(artistName)?.toCard() ?: Cards.EmptyCard
+    override fun getCard(artistName: String): Cards.Card =
+        LastFMInjector.lastFMService.getArticle(artistName)?.toCard() ?: Cards.Card(isEmpty = true)
 
-    private fun LastFMArticle.toCard(): Cards =
+    private fun LastFMArticle.toCard(): Cards.Card =
         when (this) {
-            LastFMArticle.LastFMArticleWithoutData -> Cards.EmptyCard
+            LastFMArticle.LastFMArticleWithoutData -> Cards.Card(isEmpty = true)
             is LastFMArticle.LastFMArticleWithData ->
                 Cards.Card(name, biography, articleUrl, CardSource.LastFm, LASTFM_LOGO_URL)
         }

@@ -23,17 +23,16 @@ internal class OtherInfoPresenterImpl(
         otherInfoObservable.notify(uiState)
     }
 
-    private fun List<Cards>.toUiState() = OtherInfoUiState(
+    private fun List<Cards.Card>.toUiState() = OtherInfoUiState(
         cards = map {
-            card -> when (card) {
-                is Cards.Card -> OtherInfoCardUiState(
-                    card.name,
-                    otherInfoDescriptionHelper.getDescription(card),
-                    card.infoUrl,
-                    card.sourceLogoUrl ?: "",
-                )
-                is Cards.EmptyCard -> OtherInfoCardUiState()
-            }
+            card -> if (card.isEmpty)
+                OtherInfoCardUiState()
+            else OtherInfoCardUiState(
+                card.name,
+                otherInfoDescriptionHelper.getDescription(card),
+                card.infoUrl,
+                card.sourceLogoUrl ?: "",
+            )
         }
     )
 }

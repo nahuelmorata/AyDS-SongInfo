@@ -6,7 +6,7 @@ import ayds.songinfo.moredetails.domain.Cards
 internal class CardBrokerImpl(
     private val proxies: List<Proxy>
 ): CardBroker {
-    override fun getCards(artistName: String): List<Cards> {
+    override fun getCards(artistName: String): List<Cards.Card> {
         return proxies.map {
             it.getCard(artistName)
         }

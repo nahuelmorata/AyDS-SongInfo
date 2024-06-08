@@ -11,5 +11,6 @@ data class OtherInfoCardUiState(
     val descriptionHtml: String = "",
     val infoUrl: String = "",
     val logoUrl: String = "",
-    val source: CardSource = CardSource.LastFm
+    val source: CardSource = CardSource.LastFm,
+    val isEmpty: Boolean = false
 )

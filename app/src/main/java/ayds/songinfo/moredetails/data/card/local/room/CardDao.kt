@@ -17,4 +17,7 @@ interface CardDao {
 
     @Update
     fun updateCard(card: CardEntity)
+
+    @Query("SELECT * FROM CardEntity WHERE name LIKE :name")
+    fun getCardsByName(name: String): List<CardEntity>
 }

@@ -7,10 +7,11 @@ import ayds.songinfo.moredetails.domain.CardSource
 import ayds.songinfo.moredetails.domain.Cards
 
 internal class WikipediaProxy : Proxy {
-    override fun getCard(artistName: String): Cards =
-        WikipediaInjector.wikipediaTrackService.getInfo(artistName)?.toCard(artistName) ?: Cards.EmptyCard
+    override fun getCard(artistName: String): Cards.Card =
+        WikipediaInjector.wikipediaTrackService.getInfo(artistName)?.toCard(artistName) ?:
+            Cards.Card(isEmpty = true)
 
 
-    private fun WikipediaArticle.toCard(artistName: String): Cards =
+    private fun WikipediaArticle.toCard(artistName: String): Cards.Card =
         Cards.Card(artistName, description, wikipediaURL, CardSource.Wikipedia, wikipediaLogoURL)
 }

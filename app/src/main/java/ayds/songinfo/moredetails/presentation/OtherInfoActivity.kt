@@ -40,7 +40,7 @@ class OtherInfoViewActivity : AppCompatActivity() {
 
     private fun initObservers() {
         presenter.otherInfoObservable
-            .subscribe { value -> updateUiCard(value) }
+            .subscribe { value -> updateUiCards(value) }
     }
 
     private fun getCardAsync() {
@@ -53,16 +53,26 @@ class OtherInfoViewActivity : AppCompatActivity() {
         intent.getStringExtra(ARTIST_NAME_INTENT_EXTRA) ?: throw Exception("Missing artist name")
 
 
-    private fun updateUiCard(otherInfoUiState: OtherInfoUiState) {
+    private fun updateUiCards(otherInfoUiState: OtherInfoUiState) {
         runOnUiThread {
-            otherInfoUiState.cards.forEach {
+            updateCards(otherInfoUiState)
+            updateAdapter()
+        }
+    }
+
+    private fun updateCards(otherInfoUiState: OtherInfoUiState) {
+        otherInfoUiState.cards
+            .filter { !it.isEmpty }
+            .forEach {
                 loadTabCard(it)
             }
-            viewPager.adapter = pagerAdapter
-            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                tab.text = pagerAdapter.getTitle(position)
-            }.attach()
-        }
+    }
+
+    private fun updateAdapter() {
+        viewPager.adapter = pagerAdapter
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = pagerAdapter.getTitle(position)
+        }.attach()
     }
 
     private fun loadTabCard(cardState: OtherInfoCardUiState) {

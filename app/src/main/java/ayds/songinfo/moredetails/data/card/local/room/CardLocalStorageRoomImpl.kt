@@ -8,32 +8,41 @@ import ayds.songinfo.moredetails.domain.Cards
 class CardLocalStorageRoomImpl(
     dataBase: CardDatabase,
 ) : CardLocalStorage {
-    private val songDao: CardDao = dataBase.cardDao()
+    private val cardDao: CardDao = dataBase.cardDao()
+    override fun getCards(name: String): List<Cards.Card> =
+        cardDao.getCardsByName(name).map { cardEntity -> cardEntity.toCard() }
+
+    override fun saveCards(name: String, cards: List<Cards.Card>) {
+        cards.map {
+            card -> cardDao.insertCard(card.toCardEntity(name))
+        }
+    }
 
     override fun updateCard(name: String, card: Cards.Card) {
-        songDao.updateCard(card.toCardEntity(name))
+        cardDao.updateCard(card.toCardEntity(name))
     }
 
     override fun insertCard(name: String, card: Cards.Card) {
-        songDao.insertCard(card.toCardEntity(name))
+        cardDao.insertCard(card.toCardEntity(name))
     }
 
     override fun getCardByName(name: String): Cards.Card? =
-        songDao.getCardByName(name)?.toCard()
+        cardDao.getCardByName(name)?.toCard()
 
-    private fun Cards.Card.toCardEntity(name: String) = CardEntity(
-        name,
-        this.description,
-        this.infoUrl,
-        this.source,
-        sourceLogoUrl
-    )
+    private fun Cards.Card.toCardEntity(name: String) =
+        CardEntity(
+            name,
+            description,
+            infoUrl,
+            source,
+            sourceLogoUrl
+        )
 
     private fun CardEntity.toCard() = Cards.Card(
-        this.name,
-        this.description,
-        this.infoUrl,
-        CardSource.LastFm,
-        LASTFM_LOGO_URL
+        name,
+        description,
+        infoUrl,
+        source,
+        sourceLogoUrl
     )
 }

@@ -29,11 +29,10 @@ object OtherInfoInjector {
         ).build()
 
         val cardLocalStorage = CardLocalStorageRoomImpl(dataBase)
-        val articleToCardMapper = LastFMArticleToCardMapperImpl()
         val proxies = listOf(LastFmProxy(), NYTimesProxy(), WikipediaProxy())
         val cardBroker = CardBrokerImpl(proxies)
 
-        val repository = CardRepositoryImpl(cardLocalStorage, LastFMInjector.lastFMService, articleToCardMapper, cardBroker)
+        val repository = CardRepositoryImpl(cardLocalStorage, cardBroker)
 
         val otherInfoDescriptionHelper = OtherInfoDescriptionHelperImpl()
 
