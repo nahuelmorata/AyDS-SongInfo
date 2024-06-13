@@ -2,20 +2,22 @@ package ayds.songinfo.moredetails.injector
 
 import android.content.Context
 import androidx.room.Room
-import ayds.songinfo.moredetails.data.ArticleRepositoryImpl
-import ayds.songinfo.moredetails.data.article.external.JsonArticleToBiographyResolver
-import ayds.songinfo.moredetails.data.article.external.LastFMArticleAPI
-import ayds.songinfo.moredetails.data.article.external.LastFMArticleServiceImpl
-import ayds.songinfo.moredetails.data.article.local.room.ArticleDatabase
-import ayds.songinfo.moredetails.data.article.local.room.ArticleLocalStorageRoomImpl
+import ayds.songinfo.moredetails.data.CardRepositoryImpl
+import ayds.artist.external.lastfm.injector.LastFMInjector
+import ayds.songinfo.moredetails.data.LastFMArticleToCardMapperImpl
+import ayds.songinfo.moredetails.data.card.broker.CardBrokerImpl
+import ayds.songinfo.moredetails.data.card.broker.Proxy
+import ayds.songinfo.moredetails.data.card.broker.proxy.LastFmProxy
+import ayds.songinfo.moredetails.data.card.broker.proxy.NYTimesProxy
+import ayds.songinfo.moredetails.data.card.broker.proxy.WikipediaProxy
+import ayds.songinfo.moredetails.data.card.local.room.CardDatabase
+import ayds.songinfo.moredetails.data.card.local.room.CardLocalStorageRoomImpl
 import ayds.songinfo.moredetails.presentation.OtherInfoDescriptionHelperImpl
 import ayds.songinfo.moredetails.presentation.OtherInfoPresenter
 import ayds.songinfo.moredetails.presentation.OtherInfoPresenterImpl
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
-private const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
-private const val ARTICLE_DATABASE_NAME = "article-database"
+
+private const val CARD_DATABASE_NAME = "card-database"
 
 object OtherInfoInjector {
     lateinit var presenter: OtherInfoPresenter
@@ -23,20 +25,14 @@ object OtherInfoInjector {
     fun initGraph(context: Context) {
         val dataBase = Room.databaseBuilder(
             context,
-            ArticleDatabase::class.java, ARTICLE_DATABASE_NAME
+            CardDatabase::class.java, CARD_DATABASE_NAME
         ).build()
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(LASTFM_BASE_URL)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-        val lastFMAPI = retrofit.create(LastFMArticleAPI::class.java)
+        val cardLocalStorage = CardLocalStorageRoomImpl(dataBase)
+        val proxies = listOf(LastFmProxy(), NYTimesProxy(), WikipediaProxy())
+        val cardBroker = CardBrokerImpl(proxies)
 
-        val jsonArticleToBiographyResolver = JsonArticleToBiographyResolver()
-        val lastFMArticleServiceImpl = LastFMArticleServiceImpl(lastFMAPI, jsonArticleToBiographyResolver)
-        val articleLocalStorage = ArticleLocalStorageRoomImpl(dataBase)
-
-        val repository = ArticleRepositoryImpl(articleLocalStorage, lastFMArticleServiceImpl)
+        val repository = CardRepositoryImpl(cardLocalStorage, cardBroker)
 
         val otherInfoDescriptionHelper = OtherInfoDescriptionHelperImpl()
 
