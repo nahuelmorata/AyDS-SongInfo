@@ -1,67 +1,65 @@
 package ayds.songinfo.moredetails.data
 
-import ayds.artist.external.lastfm.data.LastFMService
+import ayds.songinfo.moredetails.data.card.CardBroker
 import ayds.songinfo.moredetails.data.card.local.CardLocalStorage
 import ayds.songinfo.moredetails.domain.Cards
 import ayds.songinfo.moredetails.domain.CardRepository
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.Assert.assertEquals
 import io.mockk.every
+import io.mockk.verify
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ArticleRepositoryTest {
-    private val articleLocalStorage: CardLocalStorage = mockk(relaxUnitFun = true)
-    private val articleService: LastFMService = mockk(relaxUnitFun = true)
+    private val cardLocalStorage: CardLocalStorage = mockk(relaxUnitFun = true)
+    private val cardBroker: CardBroker = mockk(relaxUnitFun = true)
 
-    /*private val articleRepository: CardRepository =
-        CardRepositoryImpl(articleLocalStorage, articleService)*/
+    private val articleRepository: CardRepository =
+        CardRepositoryImpl(cardLocalStorage, cardBroker)
 
     @Test
     fun `given existing article by artist name should return article and mark it as local`() {
-        /*val article =
+        val article =
             Cards.Card(
                 "name",
                 "biography",
                 "url",
-                false
             )
-        every { articleLocalStorage.getCardByName("name") } returns article
+        every { cardLocalStorage.getCards("name") } returns listOf(article)
 
-        val result = articleRepository.getCard("name")
+        val result = articleRepository.getCards("name")
 
-        assertEquals(article, result)
-        assertTrue(article.isStoredLocally)*/
+        assertEquals(result.size, 1)
+        assertEquals(result.first(), article)
+        assertTrue(article.isStoredLocally)
     }
 
     @Test
     fun `given non existing song by term should get the song and store it`() {
-        /*val article =
-            Card.ArtistBiography(
-                "name",
-                "biography",
-                "url",
-                false
-            )
-        every { articleLocalStorage.getCardByName("name") } returns null
-        every { articleService.getArticle("name") } returns article
+        val articles = listOf(Cards.Card(
+            "name",
+            "biography",
+            "url",
+        ))
+        every { cardLocalStorage.getCards("name") } returns listOf()
+        every { cardBroker.getCards("name") } returns articles
 
-        val result = articleRepository.getCard("name")
+        val result = articleRepository.getCards("name")
 
-        assertEquals(article, result)
-        assertFalse(article.isStoredLocally)
-        verify { articleLocalStorage.insertCard("name", article) }*/
+        assertEquals(result.size, 1)
+        assertFalse(result.first().isStoredLocally)
+        verify { cardLocalStorage.saveCards("name", articles) }
     }
 
     @Test
     fun `given non existing song by term should return empty song`() {
-        /*every { articleLocalStorage.getCardByName("name") } returns null
-        every { articleService.getArticle("name") } returns null
+        every { cardLocalStorage.getCards("name") } returns listOf()
+        every { cardBroker.getCards("name") } returns listOf()
 
-        val result = articleRepository.getCard("name")
+        val result = articleRepository.getCards("name")
 
-        assertEquals("", result.biography)*/
+        assertEquals(result.size, 0)
     }
 }
